@@ -1,0 +1,59 @@
+<?php
+ini_set("display_errors", 1); //php.ini设置信息
+error_reporting(E_ALL);
+
+class MobileSniffer
+{
+    private $userAgent; //用户代理信息
+    private $device;  //设备信息
+    private $browser;  //浏览器信息
+    private $deviceLength;
+    private $browserLength;
+
+    public function __construct()
+    {
+        $this -> userAgent = $_SERVER['HTTP_USER_AGENT'];
+        $this -> userAgent = strtolower($this->userAgent);
+        $this -> device = array('iphone', 'ipad', 'android', 'opera', 'msie', 'safari', 'touch');
+        $this -> browser = array('firefox', 'chrome', 'opera', 'msie', 'safari', 'blackberry', 'trident');
+        $this -> deviceLength = count($this->device);
+        $this -> browserLength = count($this->browser);
+    }
+
+    public function findDevice()
+    {
+        for($uaSniff = 0; $uaSniff < $this->deviceLength; $uaSniff++)
+        {
+            if(strstr($this->userAgent, $this->device[$uaSniff]))
+            {
+                return $this -> device[$uaSniff];
+            }
+        }
+    }
+
+    public function findBrowser()
+    {
+        for($uaSniff = 0; $uaSniff < $this->browserLength; $uaSniff++)
+        {
+            if(strstr($this->userAgent, $this->browser[$uaSniff]))
+            {
+                return $this->browser[$uaSniff];
+            }
+        }
+    }
+}
+
+class Client
+{
+    private $mobSniff;
+    public function __construct()
+    {
+        $this->mobSniff = new MobileSniffer();
+        echo "Device = " . $this->mobSniff->findDevice() . "<br/>";
+        echo "browser = " . $this -> mobSniff->findBrowser() . "<br/>";
+    }
+}
+
+$trigger = new Client();
+
+?>
